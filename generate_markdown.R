@@ -9,23 +9,23 @@ files <- list.files("data/All Files/")
 # extract and save attachments and return paths
 write_attachments <- function(msg_file){
   msg <- read_msg(paste0("data/All Files/", msg_file))
-  dir_name <- paste0("data/", msg_file)
+  dir_name <- paste0("output/", msg_file)
   dir.create(dir_name)
-  save_attachments(msg_obj = dat, path = paste0("data/", msg_file))
+  save_attachments(msg_obj = dat, path = dir_name)
   #return path and file names for attachments
-  attachment_names <- list.files(paste0("data/", msg_file))
-  paths <- map_chr(attachment_names, ~paste0(dir_name, .))
-  as.data.frame(paths) %>% 
-    mutate(email = msg_file)
+  attachment_names <- list.files(dir_name)
+  as.data.frame(attachment_names) %>% 
+    mutate(email = msg_file,
+           from = unlist(msg$headers$From),
+           body = paste(msg$body$text, collapse = "\n"))
 }
 
-x <- c("test", "test")
-as.data.frame(x)
-paths <- map_dfr(files, write_attachments)
+
+paths <- map_dfr(files[2], write_attachments)
 
 write_attachments(files[1])
 
-dat <- read_msg("data/All Files/Administration modification to 2021-2025 TIP for Madison area.msg")
+dat <- read_msg(paste0("data/All Files/", files[2]))
 
 msg_text <- dat$body$text
 
@@ -46,11 +46,18 @@ msg <- paste0("From: ", dat$sender$sender_name, " (", dat$sender$sender_email,")
        dat$body$html)
 
 
-save_h
-dat$sender
+# code for rendering parametrized report
+for(i in 1:length(hospitals)){
+  rmarkdown::render(
+    input = "surveillance_report.Rmd",
+    output_file = str_glue("output/Report_{hospitals[i]}_{Sys.Date()}.docx"),
+    params = list(hospital  = hospitals[i]))
+}       
 
-dat$attachments
+rmarkdown::render(
+  input = "output_template.Rmd",
+  #output_file = paste0(paths[1,]$paths, ".html"),
+  output_file = "output/test.docx"
+  )
 
-
-dat$attachments[[1]]$filename
 

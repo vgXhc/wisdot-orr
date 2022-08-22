@@ -1,0 +1,27 @@
+---
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+```
+
+
+```{r}
+library(msgxtractr)
+library(tidyverse)
+```
+
+# `r paths[1,]$email`
+
+From: `r paths[1,]$from`
+
+Attachments: [`r paths[1,]$attachment_names`](`r paths[1,]$attachment_names`)
+
+
+
+
+```{r results='asis'}
+paths[1,]$body
+```
+
