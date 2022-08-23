@@ -12,25 +12,26 @@ library(msgxtractr)
 library(tidyverse)
 ```
 
-# `r paths[1,]$email`
+# `r email[1,]$email`
 
-**From:** `r paths[1,]$from`
+**From:** `r email[1,]$from`
 
-**To:** `r paths$to`
+**To:** `r email$to`
 
-**CC:** `r paths$cc`
+**CC:** `r email$cc`
 
-**Date:** `r paths$date`
+**Date:** `r email$date`
 
-**Subject:** `r paths$subject`
+**Subject:** `r email$subject`
 
 
 ```{r results='asis'}
-cat(paths[1,]$body)
+cat(email[1,]$body)
 ```
 
 ## Attachments
 ```{r results='asis'}
-map_chr(paths$attachments[[1]], ~paste0("[", ., "](", ., ")"))
+#creates markdown links to attachments
+map_chr(email$attachments[[1]], ~paste0("[", ., "](", ., ")"))
 
 ```
