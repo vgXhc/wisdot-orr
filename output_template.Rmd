@@ -1,5 +1,5 @@
 ---
-output: word_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -14,14 +14,23 @@ library(tidyverse)
 
 # `r paths[1,]$email`
 
-From: `r paths[1,]$from`
+**From:** `r paths[1,]$from`
 
-Attachments: [`r paths[1,]$attachment_names`](`r paths[1,]$attachment_names`)
+**To:** `r paths$to`
 
+**CC:** `r paths$cc`
 
+**Date:** `r paths$date`
+
+**Subject:** `r paths$subject`
 
 
 ```{r results='asis'}
-paths[1,]$body
+cat(paths[1,]$body)
 ```
 
+## Attachments
+```{r results='asis'}
+map_chr(paths$attachments[[1]], ~paste0("[", ., "](", ., ")"))
+
+```
